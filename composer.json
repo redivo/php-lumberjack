@@ -1,5 +1,6 @@
 {
     "name": "redivo/php-lumberjack",
+    "type": "library",
     "description": "Lumberjack: The simplest PHP Logger",
     "require": {
         "php": "^5 || ^7"
