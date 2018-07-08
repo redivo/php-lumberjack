@@ -126,7 +126,10 @@ function logMessage($severity, $message)
     }
 
    return error_log(PHP_EOL
-                        . '[' . date("Y-m-d h:m:s") . '] [' . stringifySeverity($severity) . '] '
+                        . '[' . date("Y-m-d h:m:s") . '] '
+                        . '[' . stringifySeverity($severity) . '] '
+                        . '[' . debug_backtrace()[0]['file']
+                                . ' : ' . debug_backtrace()[0]['line'] . '] '
                         . $message
                         . PHP_EOL,
                     3,
