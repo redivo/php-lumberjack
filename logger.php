@@ -125,15 +125,59 @@ function logMessage($severity, $message)
         return TRUE;
     }
 
-   return error_log(PHP_EOL
-                        . '[' . date("Y-m-d h:m:s") . '] '
-                        . '[' . stringifySeverity($severity) . '] '
-                        . '[' . debug_backtrace()[0]['file']
-                                . ' : ' . debug_backtrace()[0]['line'] . '] '
-                        . $message
-                        . PHP_EOL,
-                    3,
-                    $cfg['log_file']);
+    // Mount message according to configuration
+    $prefix = '';
+    if ($cfg['display_date']) {
+        $prefix .= '[' . date("Y-m-d h:m:s") . ']';
+    }
+    if ($cfg['display_severity']) {
+        $prefix .= '[' . stringifySeverity($severity) . ']';
+    }
+
+    if ($cfg['display_file'] || $cfg['display_line']) {
+        $prefix .= '[';
+    }
+    if ($cfg['display_file']) {
+        $prefix .= debug_backtrace()[0]['file'];
+    }
+    if ($cfg['display_line']) {
+        if ($cfg['display_file']) {
+            $prefix .= ':';
+        }
+        $prefix .= debug_backtrace()[0]['line'];
+    }
+    if ($cfg['display_file'] || $cfg['display_line']) {
+        $prefix .= ']';
+    }
+
+    if ($cfg['display_class'] || $cfg['display_function']) {
+        $prefix .= '[';
+    }
+    if ($cfg['display_class']) {
+        if (isset(debug_backtrace()[1]['class'])) {
+            $prefix .= debug_backtrace()[1]['class'];
+        }
+    }
+    if ($cfg['display_function']) {
+        if ($cfg['display_class'] && isset(debug_backtrace()[1]['class'])) {
+            $prefix .= '::';
+        }
+        if (isset(debug_backtrace()[1]['function'])) {
+            $prefix .= debug_backtrace()[1]['function'] . '()';
+        }
+        else {
+            $prefix .= '__root__';
+        }
+    }
+    if ($cfg['display_class'] || $cfg['display_function']) {
+        $prefix .= ']';
+    }
+
+    if ($prefix != '') {
+        $prefix .= ' ';
+    }
+
+     return error_log($prefix . $message . PHP_EOL, 3, $cfg['log_file']);
 }
 
 /**************************************************************************************************/
