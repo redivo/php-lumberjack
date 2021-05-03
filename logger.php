@@ -128,7 +128,7 @@ function logMessage($severity, $message)
     // Mount message according to configuration
     $prefix = '';
     if ($cfg['display_date']) {
-        $prefix .= '[' . date("Y-m-d h:m:s") . ']';
+        $prefix .= '[' . date("Y-m-d h:i:s") . ']';
     }
     if ($cfg['display_severity']) {
         $prefix .= '[' . stringifySeverity($severity) . ']';
